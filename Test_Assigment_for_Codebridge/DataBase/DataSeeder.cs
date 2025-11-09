@@ -1,4 +1,6 @@
-﻿namespace Test_Assigment_for_Codebridge.DataBase;
+﻿using Test_Assigment_for_Codebridge.Models;
+
+namespace Test_Assigment_for_Codebridge.DataBase;
 
 public static class DataSeeder
 {
@@ -8,8 +10,8 @@ public static class DataSeeder
         var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
 
         dbContext.Dogs.AddRangeAsync(
-            new Models.Dog { Name = "Neo", Color = "red & amber", TailLength = 22, Weight = 32 },
-            new Models.Dog { Name = "Jessy", Color = "black & white", TailLength = 7, Weight = 14 });
+            new Dog { Name = "Neo", Color = "red & amber", TailLength = 22, Weight = 32 },
+            new Dog { Name = "Jessy", Color = "black & white", TailLength = 7, Weight = 14 });
 
         dbContext.SaveChangesAsync();
     }
