@@ -54,7 +54,8 @@ public class DogService
         {
             "id" => d => d.Id,
             "name" => d => d.Name,
-            "weight" => d => d.Weight,
+            "color" => d => d.Color,
+            "weight" => d => d.Weight,            
             "tail_length" => d => d.TailLength,
             _ => d => d.Id
         };
