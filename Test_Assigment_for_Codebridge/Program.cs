@@ -1,4 +1,5 @@
 using FluentValidation;
+using Microsoft.EntityFrameworkCore;
 using System.Reflection;
 using Test_Assigment_for_Codebridge.DataBase;
 using Test_Assigment_for_Codebridge.Middleware;
@@ -13,7 +14,9 @@ public class Program
         var builder = WebApplication.CreateBuilder(args);
 
         // DI
-        builder.Services.AddDbContext<AppDbContext>();
+        builder.Services.AddDbContext<AppDbContext>(options =>      
+            options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
+
         builder.Services.AddScoped<DogService>();
 
         builder.Services.AddControllers();
