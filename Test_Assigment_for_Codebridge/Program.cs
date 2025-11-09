@@ -1,3 +1,9 @@
+using FluentValidation;
+using System.Reflection;
+using Test_Assigment_for_Codebridge.DataBase;
+using Test_Assigment_for_Codebridge.Middleware;
+using Test_Assigment_for_Codebridge.Services;
+
 namespace Test_Assigment_for_Codebridge;
 
 public class Program
@@ -6,27 +12,35 @@ public class Program
     {
         var builder = WebApplication.CreateBuilder(args);
 
-        // Add services to the container.
+        // DI
+        builder.Services.AddDbContext<AppDbContext>();
+        builder.Services.AddScoped<DogService>();
 
         builder.Services.AddControllers();
-        // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+        builder.Services.AddValidatorsFromAssemblyContaining<Program>();
         builder.Services.AddEndpointsApiExplorer();
-        builder.Services.AddSwaggerGen();
+        builder.Services.AddSwaggerGen(options =>
+        {
+            var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+            var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+            options.IncludeXmlComments(xmlPath);
+        });
 
         var app = builder.Build();
 
-        // Configure the HTTP request pipeline.
+        // Development config
         if (app.Environment.IsDevelopment())
         {
             app.UseSwagger();
             app.UseSwaggerUI();
+            DataSeeder.ClearDb(app.Services).Wait();
+            DataSeeder.Seed(app.Services).Wait();
         }
 
+        // Middleware
+        app.UseRouting();
+        app.UseMiddleware<ExceptionsHandler>();
         app.UseHttpsRedirection();
-
-        app.UseAuthorization();
-
-
         app.MapControllers();
 
         app.Run();
