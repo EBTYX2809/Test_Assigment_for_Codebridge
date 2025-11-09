@@ -17,22 +17,29 @@ public class DogService
 
     public async Task CreateDogAsync(Dog dog)
     {
+        try
+        {
+            var existingDog = await GetDogByNameAsync(dog.Name);
+            throw new ArgumentException("Dog with this name already exists");
+        }
+        catch (ArgumentNullException) { } // Dog with this name does not exist, allow to create            
+
         await _dbContext.Dogs.AddAsync(dog);
         await _dbContext.SaveChangesAsync();
     }
 
-    public async Task<Dog?> GetDogByIdAsync(int dogId)
+    public async Task<Dog> GetDogByIdAsync(int dogId)
     {
         var dog = await _dbContext.Dogs.FirstOrDefaultAsync(d => d.Id == dogId) 
-            ?? throw new ArgumentNullException("Dog not found");
+            ?? throw new ArgumentNullException("Dog by this Id not found");
 
         return dog;
     }
 
-    public async Task<Dog?> GetDogByNameAsync(string dogName)
+    public async Task<Dog> GetDogByNameAsync(string dogName)
     {
         var dog = await _dbContext.Dogs.FirstOrDefaultAsync(d => d.Name == dogName)
-            ?? throw new ArgumentNullException("Dog not found");
+            ?? throw new ArgumentNullException("Dog by this Name not found");
 
         return dog;
     }
