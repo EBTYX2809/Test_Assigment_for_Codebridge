@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using Test_Assigment_for_Codebridge.DataBase;
 using Test_Assigment_for_Codebridge.Models;
 using Test_Assigment_for_Codebridge.Models.SortingAndPagination.DTOs;
+using Test_Assigment_for_Codebridge.Models.Validators;
 using Test_Assigment_for_Codebridge.Services;
 using Tests.DataBase;
 
@@ -209,6 +210,9 @@ public class DogQueryTests
         };
 
         // Act & Assert
-        await Assert.ThrowsAsync<Exception>(() => service.GetDogsByQueryAsync(invalidQuery));
+        DogQueryValidator validator = new DogQueryValidator();
+        var error = validator.Validate(invalidQuery);
+        Assert.NotNull(error.Errors);
+        Assert.False(error.IsValid);
     }
 }

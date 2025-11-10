@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Test_Assigment_for_Codebridge.DataBase;
 using Test_Assigment_for_Codebridge.Models;
+using Test_Assigment_for_Codebridge.Models.Validators;
 using Test_Assigment_for_Codebridge.Services;
 using Tests.DataBase;
 
@@ -54,10 +55,10 @@ public class DogCreationTests
         };
 
         // Act & Assert
-        await Assert.ThrowsAsync<Exception>(async () =>
-        {
-            await _dogService.CreateDogAsync(invalidDog);
-        });
+        DogValidator validator = new DogValidator();
+        var error = validator.Validate(invalidDog);
+        Assert.NotNull(error.Errors);
+        Assert.False(error.IsValid);        
     }
 
     [Fact]
