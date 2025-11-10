@@ -23,6 +23,7 @@ public class DogController : ControllerBase
     /// <returns>Return dog object.</returns>
     /// <response code="200">Success.</response>
     /// <response code="404">Dog not found.</response>
+    /// <response code="429">Too many requests.</response>
     /// <response code="500">Internal server error.</response>
     [HttpGet("{id}")]
     public async Task<ActionResult<Dog>> GetDogById(int id)
@@ -43,6 +44,7 @@ public class DogController : ControllerBase
     /// <returns>Returns PaginatedResultDTO with list of filtered gods.</returns>
     /// <response code="200">Success.</response>
     /// <response code="400">Validation failed.</response>
+    /// <response code="429">Too many requests.</response>
     /// <response code="500">Internal server error.</response>
     [HttpGet]
     public async Task<ActionResult<PaginatedResultDTO<Dog>>> GetDogsByQuery([FromQuery] DogQueryDTO dogQueryDTO)
@@ -60,6 +62,7 @@ public class DogController : ControllerBase
     /// <response code="201">Dog successfully created.</response>
     /// <response code="400">Validation failed.</response>
     /// <response code="404">Dog not found.</response>
+    /// <response code="429">Too many requests.</response>
     /// <response code="500">Internal server error.</response>
     [HttpPost]
     public async Task<ActionResult<int>> CreateDog([FromBody] Dog dog)
